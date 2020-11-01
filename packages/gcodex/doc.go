@@ -69,7 +69,7 @@ package main // import "golang.org/x/tools/cmd/godex"
 // BUG(gri): gccgo-importing appears to have occasional problems stalling godex; try -s=gc as work-around
 
 // usage:定义类型>CLI 选择生成菜单>输入参数>生成目标文件>执行 go generate
-// 生成函数：输入类型/形参/返回值，go generator 生成
+// 生成函数：输入类型/形参/返回值，go generator stringer 生成
 // 生成枚举：兼容 [stringer](golang.org/x/tools/cmd/stringer)
 // 生成模块:
 // 生成模版项目:
