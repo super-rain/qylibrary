@@ -1,2 +1,2 @@
 # qylibrary
-qylibrary——Go library 基础依赖库
+qylibrary——提供简单易用、功能完整、高质量的 Go 微服务工具包。
