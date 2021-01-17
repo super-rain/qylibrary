@@ -14,9 +14,8 @@
    ```
    go get git@github.com:super-rain/qylibrary.git
    ```
-4. 如有其他问题，欢迎提[Issue](https://github.com/super-rain/qylibrary/issues/new)
 
-## 包结构
+## 功能
 
 以下为基础目录，每个包的使用方法见包下ReadMe说明及Example
 
@@ -29,6 +28,9 @@
     │   ├── gcodex_test.go
     │   └── types.go
 
+## 设计实现
+
+领域建模(PB文件)->CLI命令->meta data->go yacc/go generate->Source code
 ## 版本说明
 
 [版本说明](https://github.com/super-rain/qylibrary/releases)
