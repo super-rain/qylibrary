@@ -5,12 +5,13 @@
 
 1. Golang 版本要求最低 1.13
 2. 使用该库需要设置如下环境变量
+3. 使用 wire 框架实现
    ```
    GOPROXY=https://goproxy.io,direct
    
    GOSUMDB=off
    ```
-3. 可通过如下指令引入依赖库
+4. 可通过如下指令引入依赖库
    ```
    go get git@github.com:super-rain/qylibrary.git
    ```
