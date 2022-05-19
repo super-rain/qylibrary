@@ -1,0 +1,41 @@
+
+# 数据库
+[[DB]]
+name="phoenix_house"
+comment="梧桐屋"
+
+# 表
+[[DB.tables]]
+name="user"
+comment="用户表"
+# 列集合
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+
+[[DB.tables]]
+name="user_address"
+comment="用户地址表"
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+
+[[DB.tables]]
+name="user_tag"
+comment="用户标签表"
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+
+[[DB.tables]]
+name="user_level"
+comment="用户级别表"
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+[[DB.tables]]
+columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]

@@ -1,9 +1,9 @@
 package gcodex
 
-import(
-	"golang.org/x/tools/cmd/stringer"
-)
+// import(
+// 	"golang.org/x/tools/cmd/stringer"
+// )
 
-func genEnum(){
-	// stringer
-}
+// func genEnum(){
+// 	// stringer
+// }

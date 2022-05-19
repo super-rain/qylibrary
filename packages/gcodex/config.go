@@ -1,39 +1,75 @@
 package gcodex
 
-// Arguments to format are:
-//	[1]: type name
-//	[2]: size of index element (8 for uint8 etc.)
-//	[3]: less than zero check (for signed types)
-const stringOneRun = `func (i %[1]s) String() string {
-	if %[3]si >= %[1]s(len(_%[1]s_index)-1) {
-		return "%[1]s(" + strconv.FormatInt(int64(i), 10) + ")"
-	}
-	return _%[1]s_name[_%[1]s_index[i]:_%[1]s_index[i+1]]
-}
-`
+import (
+	"fmt"
+	"log"
 
-// Arguments to format are:
-//	[1]: type name
-//	[2]: lowest defined value for type, as a string
-//	[3]: size of index element (8 for uint8 etc.)
-//	[4]: less than zero check (for signed types)
-/*
- */
-const stringOneRunWithOffset = `func (i %[1]s) String() string {
-	i -= %[2]s
-	if %[4]si >= %[1]s(len(_%[1]s_index)-1) {
-		return "%[1]s(" + strconv.FormatInt(int64(i + %[2]s), 10) + ")"
-	}
-	return _%[1]s_name[_%[1]s_index[i] : _%[1]s_index[i+1]]
-}
-`
+	"github.com/spf13/viper"
+)
 
-// Argument to format is the type name.
-const stringMap = `func (i %[1]s) String() string {
-	if str, ok := _%[1]s_map[i]; ok {
-		return str
-	}
-	return "%[1]s(" + strconv.FormatInt(int64(i), 10) + ")"
+type IDLConfig struct {
+	DataBase *DBMetadata `json:"db_metadata"`
 }
-`
-package gcodex
+
+type DBMetadata struct {
+	DataBase *DBConfig `json:"db"`
+}
+
+type DBConfig struct {
+	Name   string           `json:"name"`
+	Tables []*TableMetadata `json:"tables"`
+}
+
+type TableMetadata struct {
+	Name    string   `json:"name"`
+	Comment string   `json:"comment"`
+	Columns []string `json:"columns"`
+}
+
+var ViperCfg *viper.Viper
+
+func LoadIDLConfig(cfgPath, name string) {
+	if name == "" {
+		log.Fatalln("config name is empty.")
+	}
+	if cfgPath == "" {
+		cfgPath = "."
+		// return nil,Err_IDL_File_Not_Exists
+	}
+
+	fmt.Println("loading config begin...")
+
+	ViperCfg = viper.New()
+	ViperCfg.SetConfigName(name)
+	// ViperCfg.SetConfigType("toml")
+	ViperCfg.AddConfigPath(cfgPath)
+	err := ViperCfg.ReadInConfig()
+	if err != nil {
+		log.Fatalf("Fatal error config file: %s \n", err)
+	}
+	allkeys := ViperCfg.AllKeys()
+	fmt.Println(allkeys)
+	// vv := ViperCfg.AllSettings()
+	// fmt.Println(vv)
+	db := ViperCfg.GetStringMap("db")
+	dbname := db["name"]
+	comment := db["name"]
+	tables := ViperCfg.GetStringMap("db.tables")
+	cols := ViperCfg.GetStringMapStringSlice("db.tables.columns")
+	tname := tables["name"]
+	tcomment := tables["name"]
+	fmt.Printf("db:%v,name:%v,comment:%v,tables:%v,tcomment:%v,tablesS:%v,cols:%v", db, dbname, comment, tables, tname, tcomment, cols)
+
+	var idl IDLConfig
+	err = ViperCfg.Unmarshal(&idl)
+	if err != nil {
+		log.Fatalf("unable to decode into struct, %v", err)
+	}
+
+	keys := ViperCfg.AllKeys()
+	val := ViperCfg.AllSettings()
+	fmt.Printf("keys:%s\n", keys)
+	fmt.Printf("val:%s\n", val)
+	fmt.Println("load cofing success.")
+
+}
