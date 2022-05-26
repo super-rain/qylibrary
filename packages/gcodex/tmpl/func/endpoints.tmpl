@@ -1,0 +1,56 @@
+package lottery
+
+import (
+	"context"
+
+	"github.com/go-kit/kit/endpoint"
+)
+
+// balancing & limiting
+// tracing
+// logging
+// metrics
+// middleware ...
+// TODO: public:允许外网访问，internal:内部访问，支持后台服务间调用/高级聚合接口/内部服务调用/分布式事务
+
+func makeListLotteryEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		list, err := s.GetAll(ctx)
+		if err != nil {
+			// TODO:错误向上抛出
+		}
+		return list, nil
+	}
+}
+
+func makeLoadLotteryEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(LoadLotteryRequestData)
+		l, err := s.Get(ctx, req)
+		return l, err
+	}
+}
+
+func makeAddLotteryEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(LotteryRequestData)
+		err := s.Add(ctx, req.Item)
+		return nil, err
+	}
+}
+
+func makeChangeLotteryEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(LotteryRequestData)
+		err := s.Edit(ctx, req.ID, req.Item)
+		return nil, err
+	}
+}
+
+func makeDeleteLotteryEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(LotteryRequestData)
+		err := s.Delete(ctx, req.ID)
+		return nil, err
+	}
+}

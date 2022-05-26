@@ -18,19 +18,19 @@ func Test_genSchemaCode(t *testing.T) {
 					StructTag:  "user_name",
 					StorageKey: "user_name",
 					Comment:    "用户名",
-					FieldType:  TypeString,
+					FieldType:  "string",
 					DefaultVal: DefaultValue[TypeString],
 					MaxLen:     64,
 					IsUnique:   true,
 					UidxName:   "uidx_user_name",
 				},
 				&ColumnType{
-					Name:          "una1",
-					StructTag:     "una2",
-					StorageKey:    "una2",
-					Comment:       "una2eeeee",
-					FieldType:     TypeInt,
-					DefaultVal:    "dd",
+					Name:          "age",
+					StructTag:     "age",
+					StorageKey:    "age",
+					Comment:       "年龄",
+					FieldType:     "int",
+					DefaultVal:    0,
 					MaxLen:        64,
 					MinLen:        10,
 					IsNonNegative: false,
@@ -56,8 +56,8 @@ func Test_genSchemaCode(t *testing.T) {
 					StructTag:     "una2",
 					StorageKey:    "una2",
 					Comment:       "una2eeeee",
-					FieldType:     TypeInt,
-					DefaultVal:    "dd",
+					FieldType:     "int",
+					DefaultVal:    0,
 					MaxLen:        64,
 					MinLen:        10,
 					IsNonNegative: true,
@@ -158,7 +158,7 @@ func Test_genSchemaCode(t *testing.T) {
 					StructTag:     "balance",
 					StorageKey:    "balance",
 					Comment:       "余额",
-					FieldType:     TypeDecimal,
+					FieldType:     "decimal",
 					DefaultVal:    0.00,
 					IsNonNegative: true,
 					Scale:         2,
@@ -171,7 +171,7 @@ func Test_genSchemaCode(t *testing.T) {
 					StructTag:     "balance2",
 					StorageKey:    "balance2",
 					Comment:       "余额",
-					FieldType:     TypeDecimal,
+					FieldType:     "decimal",
 					DefaultVal:    0.00,
 					IsNonNegative: true,
 					Scale:         2,
@@ -182,7 +182,7 @@ func Test_genSchemaCode(t *testing.T) {
 					StructTag:  "last_login_time",
 					StorageKey: "last_login_time",
 					Comment:    "最后登录时间",
-					FieldType:  TypeDatetime,
+					FieldType:  "datetime",
 					IsOptional: true,
 					IsIndex:    true,
 					IdxName:    "idx_last_login_time",
@@ -211,20 +211,85 @@ func Test_genSchemaCode(t *testing.T) {
 			},
 			Edges: []*ModelRelationShip{
 				&ModelRelationShip{
-					From: "",
-					To:   "",
-					Ref:  "",
+					To:     "UserTag",
+					ToName: "tags",
+				},
+				&ModelRelationShip{
+					To:     "UserTask",
+					ToName: "tasks",
+				},
+				&ModelRelationShip{
+					FromName: "groups",
+					From:     "Group",
+					RefName:  "users",
+					To:       "Tag",
+					ToName:   "tags",
+				},
+			},
+		},
+		&TableMetaData{
+			PackageName: "schema",
+			Name:        "user_tag",
+			Comment:     "标签表",
+			Columns: []*ColumnType{
+				&ColumnType{
+					Name:       "user_id",
+					StructTag:  "uid",
+					StorageKey: "uid",
+					Comment:    "用户ID",
+					FieldType:  "string",
+					DefaultVal: DefaultValue[TypeString],
+					MaxLen:     64,
+					IsUnique:   true,
+					UidxName:   "uidx_user_id",
+				},
+				&ColumnType{
+					Name:         "tag",
+					StructTag:    "tag",
+					StorageKey:   "tag",
+					Comment:      "tag",
+					FieldType:    "string",
+					DefaultVal:   "dd",
+					MaxLen:       64,
+					MinLen:       10,
+					IsSensitive:  true,
+					IsOptional:   true,
+					IsPrimary:    true,
+					PkName:       "pkname",
+					IsForeignKey: true,
+					FkName:       "fkname",
+					IsUnique:     true,
+					UidxName:     "uidxname",
+					IsIndex:      true,
+					IdxName:      "idxname",
+				},
+			},
+			Edges: []*ModelRelationShip{
+				&ModelRelationShip{
+					To:     "User",
+					ToName: "users",
+				},
+				&ModelRelationShip{
+					FromName: "owner",
+					From:     "User",
+					RefName:  "tags",
 				},
 			},
 		},
 	}
-	opt := &SchemaOption{
+	opt := &DBCfgdata{
 		tmplName:    "ent.tmpl",
-		idlFilePath: "./tmpl/model/",
-		tarFilePath: "./dist/http/ent/schema/",
-		tables:      tbs,
+		filePath:    "./tmpl/model/",
+		tarFilePath: "./dist/ent/",
+		Tables:      tbs,
 	}
 
-	err := genSchemaCode(opt)
+	err := GenSchemaCode(opt)
 	assert.Nil(t, err, "genSchemaCode() success.")
+}
+
+func TestInitEntSchema(t *testing.T) {
+	got, err := InitEntSchema("ent.tmpl", "./tmpl/model/", "./dist/ent/")
+	assert.Nil(t, err, "genSchemaCode() success.")
+	assert.Nil(t, got, "genSchemaCode() success.")
 }

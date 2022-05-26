@@ -6,8 +6,11 @@ import (
 
 var (
 	ErrInvalidSchemaOption     = errors.New("invalid schema option.")
-	ErrIDLNotExists            = errors.New("IDL file not exists.")
+	ErrIDLFileNotExists            = errors.New("IDL file not exists.")
+	ErrInitIDLMetadata      = errors.New("loading IDL tmpl fail.")
+	ErrInvalidIDLMetadata      = errors.New("invalid IDL metadata.")
 	ErrInvalidEntitiesMetadata = errors.New("invalid entities metadata.")
+	ErrDBHasEmptyTable= errors.New("DB has empty table .")
 )
 
 // type ErrCode int

@@ -31,7 +31,14 @@
 
 ## 设计实现
 
-领域建模(PB文件)->CLI命令->meta data->go yacc/go generate->Source code
+>领域建模(PB文件)->CLI命令->meta data->go yacc/go generate->Source code
+
+## 使用
+
+- 输入 `gcodex generate` 命令生成 ent 模版源码文件
+- 进入 ./ent 同级目录，执行 `go generate ./ent` 或者 在根目录执行“`go run -mod=mod entgo.io/ent/cmd/ent generate ./dist/ent/schema`” 生成模型 CRUD 代码
+- `gocodex generate --type=svc` 生成 `erpo/service/type/endpoint/transport` 源码文件
+- `gcpdex generate --type=pb` 生成 grpc 模版源码文件
 ## 版本说明
 
 [版本说明](https://github.com/super-rain/qylibrary/releases)

@@ -3,7 +3,7 @@
 
 ## 说明
 
-1. Golang 版本要求最低 1.13
+1. Go Version 1.13+
 2. 使用该库需要设置如下环境变量
    ```
    GOPROXY=http://goproxy.qingting-hz.com

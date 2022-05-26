@@ -21,38 +21,19 @@
 
 # 数据库
 [[DB]]
-name="phoenix_house"
+Name="phoenix_house"
+Comment="梧桐屋"
 
 # 表
-[[DB.tables]]
-name="user"
-comment="用户表"
+[[DB.Tables]]
+Name="user"
+Comment="用户表"
 # 列集合
-[[DB.tables]]
-columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
-[[DB.tables]]
-columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+Columns=[{Name="dd",StructTag="dd",StorageKey="dd",FieldType="int",MaxLen=64,MinLen=10,Precision=10,Scale=2,AutoInc=false,IsNonNegative=false,DefaultVal="",IsSensitive=false,IsImmutable=false,IsOptional=false,Enumerable=true,EnumVals=["a","b","c","d"],IsPrimary=true,PkName="pk_user_id",IsForeignKey=true,FkName="fk_user_id",IsUnique=true,UidxName="uidx_userID",IsIndex=true,IdxName="idx_userID",Comment="用户ID"},{Name="user_ID",StructTag="dd",StorageKey="dd",FieldType="int",MaxLen=64,MinLen=10,Precision=10,Scale=2,AutoInc=false,IsNonNegative=false,DefaultVal="",IsSensitive=false,IsImmutable=false,IsOptional=false,Enumerable=true,EnumVals=["a","b","c","d"],IsPrimary=true,PkName="pk_user_id",IsForeignKey=true,FkName="fk_user_id",IsUnique=true,UidxName="uidx_userID",IsIndex=true,IdxName="idx_userID",Comment="用户ID"}]
 
-[[DB.tables]]
-name="user_address"
-comment="用户地址表"
-[[DB.tables]]
-columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
-[[DB.tables]]
-columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+Edges=[{From="tag",FromName="tags",To="pet",ToName="pets",RefName="user"},{To="group",ToName="groups",RefName="user"}]
 
-[[DB.tables]]
-name="user_tag"
-comment="用户标签表"
-[[DB.tables]]
-columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
-[[DB.tables]]
-columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
-
-[[DB.tables]]
-name="user_level"
-comment="用户级别表"
-[[DB.tables]]
-columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
-[[DB.tables]]
-columns=["column_name","type","default","is_not_null","is_primary_key","pk_name","is_foreign_key","fk_name","is_unique_index","uidx_name","is_index","idx_name","comment"]
+[[DB.Tables]]
+Name="tag"
+Comment="标签表"
+Columns=[{Name="dd",StructTag="dd",StorageKey="dd",FieldType="int",MaxLen=64,MinLen=10,Precision=10,Scale=2,AutoInc=false,IsNonNegative=false,DefaultVal="",IsSensitive=false,IsImmutable=false,IsOptional=false,Enumerable=true,EnumVals=["a","b","c","d"],IsPrimary=true,PkName="pk_user_id",IsForeignKey=true,FkName="fk_user_id",IsUnique=true,UidxName="uidx_userID",IsIndex=true,IdxName="idx_userID",Comment="用户ID"},{Name="user_ID",Struct_tag="dd",StorageKey="dd",FieldType="int",MaxLen=64,MinLen=10,Precision=10,Scale=2,AutoInc=false,IsNonNegative=false,DefaultVal="",IsSensitive=false,IsImmutable=false,IsOptional=false,Enumerable=true,EnumVals=["a","b","c","d"],IsPrimary=true,PkName="pk_user_id",IsForeignKey=true,FkName="fk_user_id",IsUnique=true,UidxName="uidx_userID",IsIndex=true,IdxName="idx_userID",Comment="用户ID"}]
