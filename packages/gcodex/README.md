@@ -33,6 +33,12 @@
 
 >领域建模(PB文件)->CLI命令->meta data->go yacc/go generate->Source code
 
+## TODO
+
+- [ ] grpc
+- [ ] go generate
+- [ ] gpromise
+
 ## 使用
 
 - 输入 `gcodex generate` 命令生成 ent 模版源码文件

@@ -278,18 +278,12 @@ func Test_genSchemaCode(t *testing.T) {
 		},
 	}
 	opt := &DBCfgdata{
-		tmplName:    "ent.tmpl",
-		filePath:    "./tmpl/model/",
-		tarFilePath: "./dist/ent/",
+		TmplName:    "ent.tmpl",
+		FilePath:    "./tmpl/",
+		TarFilePath: "./dist/ent/",
 		Tables:      tbs,
 	}
 
-	err := GenSchemaCode(opt)
+	err := GenEntSchemaCode(opt)
 	assert.Nil(t, err, "genSchemaCode() success.")
-}
-
-func TestInitEntSchema(t *testing.T) {
-	got, err := InitEntSchema("ent.tmpl", "./tmpl/model/", "./dist/ent/")
-	assert.Nil(t, err, "genSchemaCode() success.")
-	assert.Nil(t, got, "genSchemaCode() success.")
 }

@@ -4,46 +4,32 @@ package {{.PackageName}}
 import (
 	"context"
     "errors"
-
-	{{- range $pkg:=.Packages}}
-	"{{$pkg}}"
-	{{end -}}
 )
 
-type BaseService[T any] interface {
-	Get(ctx context.Context, params *T) (*T, error)
-	GetAll(ctx context.Context) ([]T, error)
-	Add(ctx context.Context, item T) error
-	Edit(ctx context.Context, id int64, item T) error
-	Delete(ctx context.Context, id int64) error
+type Load{{ToCamel .Name}}Param struct{
+	// model fields
+	// ...
 }
 
-
-type LotteryStyle int8
-
-const (
-	LotteryStyleJIUGONGGE LotteryStyle = iota
-	LotteryStyleDAZHUANPAN
-	LotteryStyleGUAGUAKA
-	LotteryStyleKAIBAOXIANG
-	LotteryStyleLAOHUJI
-)
-
-type LoadLotteryRequestData struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
-}
-
-type LotteryRequestData struct {
-	ID   int64      `json:"id"`
-	Item LotteryDTO `json:"item"`
+type {{ToCamel .Name}}DTO struct{
+	// model fields
+	// ...
 }
 
 // requestData>DTO>entity
-// entity>DTO>responseData
-type LotteryDTO struct {
+type {{ToCamel .Name}}RequestData struct{
+	// model fields
+	// ...
 }
 
-type LotteryResponseData struct {
-	Lottery
+// entity>DTO>responseData
+type {{ToCamel .Name}}ResponseData struct{
+	// model fields
+	// ...
+}
+
+type {{ToCamel .Name}}Schema struct{
+	Code int              `json:"code"` // 1
+	Message  string           `json:"msg"`  // success
+	Data {{ToCamel .Name}}ResponseData `json:"data"`
 }

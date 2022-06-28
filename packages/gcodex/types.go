@@ -12,6 +12,13 @@ var uppercaseAcronym = map[string]string{
 	"ID": "id",
 }
 
+var (
+	backendSpec  = []string{"cmd", "config", "idl", "docs/rfc", "docs/uml", "internal", "scripts"}
+	frontendSpec = []string{}
+	funcTmplList = []string{"main.tmpl", "repos.tmpl", "services.tmpl", "endpoints.tmpl", "transports.tmpl", "types.tmpl", "errors.tmpl", "middleware.tmpl"}
+	tmplFilePath = "./tmpl/"
+)
+
 // idl type ,toml结构须和 struct 层级一致
 // struct 映射字段须导出
 // 表名须一致，大小写敏感，字段大小写不敏感不支持特殊字符
@@ -21,34 +28,19 @@ type IDLConfig struct {
 }
 
 type DBCfgdata struct {
-	tmplName    string // 带后缀
-	filePath    string // 相对路径或绝对路径
-	tarFilePath string // 相对路径或绝对路径
-	Name    string
-	Comment string
-	Tables  []*TableMetaData
+	TmplName    string // 带后缀
+	FilePath    string // 相对路径或绝对路径
+	TarFilePath string // 相对路径或绝对路径
+	Name        string
+	Comment     string
+	Tables      []*TableMetaData
 }
-
-// type TableCfgData struct {
-// 	Name      string     `json:"name"`
-// 	Comment   string     `json:"comment"`
-// 	ColumnSet [][]string `json:"columns"`
-// }
-
-// type TableCfgData struct {
-// 	tmplName    string // 带后缀
-// 	filePath    string // 相对路径或绝对路径
-// 	tarFilePath string // 相对路径或绝对路径
-// 	Name        string
-// 	Comment     string
-// 	Tables      []*TableMetaData
-// }
 
 type TableMetaData struct {
 	PackageName string
 	Name        string
 	Comment     string
-	Columns     []*ColumnType 
+	Columns     []*ColumnType
 	Edges       []*ModelRelationShip
 }
 

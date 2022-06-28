@@ -1,74 +1,218 @@
-package lottery
+package {{.PackageName}}
 
 import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"qygroot/pkg/framework"
 	"strconv"
 
-	kitlog "github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/circuitbreaker"
+	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/ratelimit"
+	"github.com/go-kit/kit/tracing/opentracing"
+	"github.com/go-kit/kit/tracing/zipkin"
 	"github.com/go-kit/kit/transport"
-	kithttp "github.com/go-kit/kit/transport/http"
+	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
 )
 
-func MakeHandler(bs Service, logger kitlog.Logger) http.Handler {
+// balancing & service discovery
+// limiting
+// circuitbreaker
+// tracing
+// metrics
+// logging
+// middleware ...
+// NewHTTPHandler returns a handler for the {{.Name}} service.
+func NewHTTPHandler(endpoints {{ToCamel .Name}}Set, otTracer stdopentracing.Tracer, zipkinTracer *stdzipkin.Tracer, logger log.Logger) http.Handler {
 	opts := []kithttp.ServerOption{
 		kithttp.ServerErrorHandler(transport.NewLogErrorHandler(logger)),
 		kithttp.ServerErrorEncoder(encodeError),
 	}
 
-	listLotteryHandler := kithttp.NewServer(
-		makeListLotteryEndpoint(bs),
-		decodeListLotteryRequest,
+	if zipkinTracer != nil {
+		options = append(options, zipkin.HTTPServerTrace(zipkinTracer))
+	}
+
+	{{.Name}}ListHandler := kithttp.NewServer(
+		make{{ToCamel .Name}}ListEndpoint(bs),
+		decode{{ToCamel .Name}}ListRequest,
 		encodeResponse,
-		opts...,
+		append(options, httptransport.ServerBefore(opentracing.HTTPToContext(otTracer, "{ToCamel .Name}}Service.GetAll", logger)))...,
 	)
 
-	loadLotteryHandler := kithttp.NewServer(
-		makeLoadLotteryEndpoint(bs),
-		decodeLoadLotteryRequest,
+	load{{ToCamel .Name}}Handler := kithttp.NewServer(
+		makeLoad{{ToCamel .Name}}Endpoint(bs),
+		decodeLoad{{ToCamel .Name}}Param,
 		encodeResponse,
-		opts...,
+		append(options, httptransport.ServerBefore(opentracing.HTTPToContext(otTracer, "{ToCamel .Name}}Service.Get", logger)))...,
 	)
 
-	addLotteryHandler := kithttp.NewServer(
-		makeAddLotteryEndpoint(bs),
-		decodeAddLotteryRequest,
+	add{{ToCamel .Name}}Handler := kithttp.NewServer(
+		makeAdd{{ToCamel .Name}}Endpoint(bs),
+		decodeAdd{{ToCamel .Name}}Request,
 		encodeResponse,
-		opts...,
+		append(options, httptransport.ServerBefore(opentracing.HTTPToContext(otTracer, "{ToCamel .Name}}Service.Add", logger)))...,
 	)
 
-	changeLotteryHandler := kithttp.NewServer(
-		makeDeleteLotteryEndpoint(bs),
-		decodeChangeLotteryRequest,
+	change{{ToCamel .Name}}Handler := kithttp.NewServer(
+		makeChange{{ToCamel .Name}}Endpoint(bs),
+		decodeChange{{ToCamel .Name}}Request,
 		encodeResponse,
-		opts...,
+		append(options, httptransport.ServerBefore(opentracing.HTTPToContext(otTracer, "{ToCamel .Name}}Service.Edit", logger)))...,
 	)
 
-	deleteLotteryHandler := kithttp.NewServer(
-		makeLoadLotteryEndpoint(bs),
-		decodeDeleteLotteryRequest,
+	delete{{ToCamel .Name}}Handler := kithttp.NewServer(
+		makeDelete{{ToCamel .Name}}Endpoint(bs),
+		decodeDelete{{ToCamel .Name}}Request,
 		encodeResponse,
-		opts...,
+		append(options, httptransport.ServerBefore(opentracing.HTTPToContext(otTracer, "Sum", append(options, httptransport.ServerBefore(opentracing.HTTPToContext(otTracer, "{ToCamel .Name}}Service.delete", logger))))))...,
 	)
+
 	r := mux.NewRouter()
-
-	r.Handle("/api/v1/lotterys", listLotteryHandler).Methods("GET")
-	r.Handle("/api/v1/lotterys/{id}", loadLotteryHandler).Methods("GET")
-	r.Handle("/api/v1/lotterys", addLotteryHandler).Methods("POST")
-	r.Handle("/api/v1/lotterys/{id}", changeLotteryHandler).Methods("PUT")
-	r.Handle("/api/v1/lotterys/{id}", deleteLotteryHandler).Methods("DELETE")
+	r.Handle("/api/v1/{{.Name}}s", {{.Name}}ListHandler).Methods("GET")
+	r.Handle("/api/v1/{{.Name}}s/{id}", load{{ToCamel .Name}}Handler).Methods("GET")
+	r.Handle("/api/v1/{{.Name}}s", add{{ToCamel .Name}}Handler).Methods("POST")
+	r.Handle("/api/v1/{{.Name}}s/{id}", change{{ToCamel .Name}}Handler).Methods("PUT")
+	r.Handle("/api/v1/{{.Name}}s/{id}", delete{{ToCamel .Name}}Handler).Methods("DELETE")
 
 	return r
 }
 
-func decodeListLotteryRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func NewHTTPClient(instance string, otTracer stdopentracing.Tracer, zipkinTracer *stdzipkin.Tracer, logger log.Logger) (addservice.Service, error) {
+	if !strings.HasPrefix(instance, "http") {
+		instance = "http://" + instance
+	}
+	u, err := url.Parse(instance)
+	if err != nil {
+		return nil, err
+	}
+
+	limiter := ratelimit.NewErroringLimiter(rate.NewLimiter(rate.Every(time.Second), 100))
+
+	var options []httptransport.ClientOption
+
+	if zipkinTracer != nil {
+		options = append(options, zipkin.HTTPClientTrace(zipkinTracer))
+	}
+
+	var load{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	{
+		load{{ToCamel .Name}}Endpoint = httptransport.NewClient(
+			"POST",
+			copyURL(u, "{{.Name}}/\{\{id\}\}"),
+			decodeLoad{{ToCamel .Name}},
+			encodeResponse,
+			append(options, httptransport.ClientBefore(opentracing.ContextToHTTP(otTracer, logger)))...,
+		).Endpoint()
+		load{{ToCamel .Name}}Endpoint = opentracing.TraceClient(otTracer, "{ToCamel .Name}}Service.Get")(load{{ToCamel .Name}}Endpoint)
+		if zipkinTracer != nil {
+			load{{ToCamel .Name}}Endpoint = zipkin.TraceEndpoint(zipkinTracer, "{ToCamel .Name}}Service.Get")(load{{ToCamel .Name}}Endpoint)
+		}
+		load{{ToCamel .Name}}Endpoint = limiter(load{{ToCamel .Name}}Endpoint)
+		load{{ToCamel .Name}}Endpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{
+			Name:    "{ToCamel .Name}}Service.Get",
+			Timeout: 30 * time.Second,
+		}))(load{{ToCamel .Name}}Endpoint)
+	}
+	var {{.Name}}ListEndpoint endpoint.Endpoint
+	{
+		{{.Name}}ListEndpoint = httptransport.NewClient(
+			"POST",
+			copyURL(u, "{{.Name}}/list"),
+			decode{{ToCamel .Name}}ListRequest,
+			encodeResponse,
+			append(options, httptransport.ClientBefore(opentracing.ContextToHTTP(otTracer, logger)))...,
+		).Endpoint()
+		{{.Name}}ListEndpoint = opentracing.TraceClient(otTracer, "{ToCamel .Name}}Service.GetAll")({{.Name}}ListEndpoint)
+		if zipkinTracer != nil {
+			{{.Name}}ListEndpoint = zipkin.TraceEndpoint(zipkinTracer, "{ToCamel .Name}}Service.GetAll")({{.Name}}ListEndpoint)
+		}
+		{{.Name}}ListEndpoint = limiter({{.Name}}ListEndpoint)
+		{{.Name}}ListEndpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{
+			Name:    "{ToCamel .Name}}Service.GetAll",
+			Timeout: 30 * time.Second,
+		}))({{.Name}}ListEndpoint)
+	}
+	var add{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	{
+		add{{ToCamel .Name}}Endpoint = httptransport.NewClient(
+			"POST",
+			copyURL(u, "{{.Name}}/add"),
+			encodeResponse,
+			decodeAdd{{ToCamel .Name}}Request,
+			append(options, httptransport.ClientBefore(opentracing.ContextToHTTP(otTracer, logger)))...,
+		).Endpoint()
+		add{{ToCamel .Name}}Endpoint = opentracing.TraceClient(otTracer, "{ToCamel .Name}}Service.Add")(add{{ToCamel .Name}}Endpoint)
+		if zipkinTracer != nil {
+			add{{ToCamel .Name}}Endpoint = zipkin.TraceEndpoint(zipkinTracer, "{ToCamel .Name}}Service.Add")(add{{ToCamel .Name}}Endpoint)
+		}
+		add{{ToCamel .Name}}Endpoint = limiter(add{{ToCamel .Name}}Endpoint)
+		add{{ToCamel .Name}}Endpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{
+			Name:    "{ToCamel .Name}}Service.Add",
+			Timeout: 30 * time.Second,
+		}))(add{{ToCamel .Name}}Endpoint)
+	}
+	var change{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	{
+		change{{ToCamel .Name}}Endpoint = httptransport.NewClient(
+			"POST",
+			copyURL(u, "{{.Name}}/edit"),
+			decodeChange{{ToCamel .Name}}Request,
+			encodeResponse,
+			append(options, httptransport.ClientBefore(opentracing.ContextToHTTP(otTracer, logger)))...,
+		).Endpoint()
+		change{{ToCamel .Name}}Endpoint = opentracing.TraceClient(otTracer, "{ToCamel .Name}}Service.Edit")(change{{ToCamel .Name}}Endpoint)
+		if zipkinTracer != nil {
+			change{{ToCamel .Name}}Endpoint = zipkin.TraceEndpoint(zipkinTracer, "{ToCamel .Name}}Service.Edit")(change{{ToCamel .Name}}Endpoint)
+		}
+		change{{ToCamel .Name}}Endpoint = limiter(change{{ToCamel .Name}}Endpoint)
+		change{{ToCamel .Name}}Endpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{
+			Name:    "{ToCamel .Name}}Service.Edit",
+			Timeout: 30 * time.Second,
+		}))(change{{ToCamel .Name}}Endpoint)
+	}
+	var delete{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	{
+		delete{{ToCamel .Name}}Endpoint = httptransport.NewClient(
+			"POST",
+			copyURL(u, "{{.Name}}/delete"),
+			decodeDelete{{ToCamel .Name}}Request,
+			encodeResponse,
+			append(options, httptransport.ClientBefore(opentracing.ContextToHTTP(otTracer, logger)))...,
+		).Endpoint()
+		delete{{ToCamel .Name}}Endpoint = opentracing.TraceClient(otTracer, "{ToCamel .Name}}Service.Delete")(delete{{ToCamel .Name}}Endpoint)
+		if zipkinTracer != nil {
+			delete{{ToCamel .Name}}Endpoint = zipkin.TraceEndpoint(zipkinTracer, "{ToCamel .Name}}Service.Delete")(delete{{ToCamel .Name}}Endpoint)
+		}
+		delete{{ToCamel .Name}}Endpoint = limiter(delete{{ToCamel .Name}}Endpoint)
+		delete{{ToCamel .Name}}Endpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{
+			Name:    "{ToCamel .Name}}Service.Delete",
+			Timeout: 30 * time.Second,
+		}))(delete{{ToCamel .Name}}Endpoint)
+	}
+	
+
+	return {{ToCamel .Name}}Set{
+		Load{{ToCamel .Name}}Endpoint: load{{ToCamel .Name}}Endpoint,
+		{{ToCamel .Name}}ListEndpoint: {{.Name}}ListEndpoint,
+		Add{{ToCamel .Name}}Endpoint: add{{ToCamel .Name}}Endpoint,
+		Change{{ToCamel .Name}}Endpoint: change{{ToCamel .Name}}Endpoint,
+		Delete{{ToCamel .Name}}Endpoint: delete{{ToCamel .Name}}Endpoint, nil
+}
+
+func copyURL(base *url.URL, path string) *url.URL {
+	next := *base
+	next.Path = path
+	return &next
+}
+
+func decode{{ToCamel .Name}}ListRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	return nil, nil
 }
 
-func decodeLoadLotteryRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeLoad{{ToCamel .Name}}Param(_ context.Context, r *http.Request) (interface{}, error) {
 	vars := mux.Vars(r)
 	id, ok := vars["id"]
 	if !ok {
@@ -78,13 +222,13 @@ func decodeLoadLotteryRequest(_ context.Context, r *http.Request) (interface{}, 
 	if err != nil {
 		return nil, framework.ErrInvalidArgument
 	}
-	return LoadLotteryRequestData{
+	return Load{{ToCamel .Name}}Param{
 		ID: idV,
 	}, nil
 }
 
-func decodeAddLotteryRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var body LotteryRequestData
+func decodeAdd{{ToCamel .Name}}Request(_ context.Context, r *http.Request) (interface{}, error) {
+	var body {{ToCamel .Name}}RequestData
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		return nil, err
 	}
@@ -92,7 +236,7 @@ func decodeAddLotteryRequest(_ context.Context, r *http.Request) (interface{}, e
 	return body, nil
 }
 
-func decodeChangeLotteryRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeChange{{ToCamel .Name}}Request(_ context.Context, r *http.Request) (interface{}, error) {
 	vars := mux.Vars(r)
 	id, ok := vars["id"]
 	if !ok {
@@ -102,18 +246,18 @@ func decodeChangeLotteryRequest(_ context.Context, r *http.Request) (interface{}
 	if err != nil {
 		return nil, framework.ErrInvalidArgument
 	}
-	var body LotteryDTO
+	var body {{ToCamel .Name}}DTO
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		return nil, err
 	}
 
-	return LotteryRequestData{
+	return {{ToCamel .Name}}RequestData{
 		ID:   idV,
 		Item: body,
 	}, nil
 }
 
-func decodeDeleteLotteryRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeDelete{{ToCamel .Name}}Request(_ context.Context, r *http.Request) (interface{}, error) {
 	vars := mux.Vars(r)
 	id, ok := vars["id"]
 	if !ok {
@@ -123,9 +267,13 @@ func decodeDeleteLotteryRequest(_ context.Context, r *http.Request) (interface{}
 	if err != nil {
 		return nil, framework.ErrInvalidArgument
 	}
-	return LoadLotteryRequestData{
+	return Load{{ToCamel .Name}}RequestData{
 		ID: idV,
 	}, nil
+}
+
+type errorer interface {
+	error() error
 }
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
@@ -135,10 +283,6 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	return json.NewEncoder(w).Encode(response)
-}
-
-type errorer interface {
-	error() error
 }
 
 // encode errors from business-logic
