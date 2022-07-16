@@ -37,6 +37,7 @@
 
 - [ ] grpc
 - [ ] go generate
+- [ ] go doc comment
 - [ ] gpromise
 
 ## 使用
