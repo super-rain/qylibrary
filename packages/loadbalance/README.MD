@@ -1,9 +1,9 @@
-# qylibrary——提供简单易用、功能完整、高质量的 Go 微服务工具包
+# qylibrary——Go library 基础依赖库
 
 
 ## 说明
 
-1. Go Version 1.13+
+1. Golang 版本要求最低 1.13
 2. 使用该库需要设置如下环境变量
    ```
    GOPROXY=http://goproxy.qingting-hz.com
