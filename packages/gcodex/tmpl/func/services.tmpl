@@ -1,0 +1,57 @@
+package {{.PackageName}}
+
+import (
+	"context"
+)
+
+// TODO:go v1.19 support
+type {{ToCamel .Name}}Service interface {
+	Get(ctx context.Context, params *Load{{ToCamel .Name}}Param) (*{{ToCamel .Name}}DTO, error)
+	GetAll(ctx context.Context) ([]{{ToCamel .Name}}DTO, error)
+	Add(ctx context.Context, item {{ToCamel .Name}}DTO) error
+	Edit(ctx context.Context, id int64, item {{ToCamel .Name}}) error
+	Delete(ctx context.Context, id int64) error
+}
+
+// TODO: public:允许外网访问，internal:内部访问，支持后台服务间调用/高级聚合接口/内部服务调用/分布式事务
+type {{.Name}}Service struct {
+	repo *{{ToCamel .Name}}Repository
+}
+
+func NewService() *{{ToCamel .Name}}Service {
+	svc := new(*{{ToCamel .Name}}Service)
+	svc.repo = NewRepository()
+	return svc
+}
+
+func (svc *{{ToCamel .Name}}Service) Get(ctx context.Context, params Load{{ToCamel .Name}}Param) (*{{ToCamel .Name}}DTO, error) {
+	item, err := svc.repo.Find(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	// TODO: entity -> entityDTO
+
+	return entityDTO, nil
+}
+
+func (svc *{{ToCamel .Name}}Service) GetAll(ctx context.Context) ([]{{ToCamel .Name}}DTO, error) {
+	list,err:=svc.repo.FindAll(ctx)
+	if err!=nil{
+		return nil,err
+	}
+	// TODO: entitys -> entitysDTO
+
+	return entitysDTO,nil
+}
+
+func (svc *{{ToCamel .Name}}Service) Add(ctx context.Context, item {{ToCamel .Name}}DTO) error {
+	return svc.repo.Create(ctx, item)
+}
+
+func (svc *{{ToCamel .Name}}Service) Edit(ctx context.Context, id int64, item {{ToCamel .Name}}DTO) error {
+	return svc.repo.Update(ctx, id, item)
+}
+
+func (svc *{{ToCamel .Name}}Service) Delete(ctx context.Context, id int64) error {
+	return svc.repo.Delete(ctx, id)
+}

@@ -1,0 +1,64 @@
+package {{.PackageName}}
+
+import (
+	"context"
+
+	"gcodex/dist/ent"
+	"gcodex/dist/ent/{{.Name}}"
+)
+
+import (
+	"context"
+)
+
+type {{ToCamel .Name}}Repository struct{
+	*Client
+}
+
+func NewRepository(opts ...Option) *{{ToCamel .Name}}Repository {
+	c := NewClient(opts...)
+	repo := &{{ToCamel .Name}}Repository{
+		Client: c,
+	}
+	return repo
+}
+
+func(repo *{{ToCamel .Name}}Repository) Find(ctx context.Context,params Load{{ToCamel .Name}}Param)(*{{ToCamel .Name}},error){
+	result,err:=repo.{{ToCamel .Name}}.Query().Where(
+	// TODO: create where sql
+	// eg:{{.Name}}.IDEQ(params.ID),{{.Name}}.XxEQ(params.Xx),
+	).Only(ctx)
+
+	return result,err
+}
+
+func(repo *{{ToCamel .Name}}Repository) FindAll(ctx context.Context)([]*{{ToCamel .Name}},error){
+	rets,err:=repo.{{ToCamel .Name}}.Query().All(ctx)
+
+	return rets,err
+}
+
+func (repo *{{ToCamel .Name}}Repository) Create(ctx context.Context, item {{ToCamel .Name}}) (*{{ToCamel .Name}}, error) {
+	u, err := repo.{{ToCamel .Name}}.Create().
+	// TODO: set model field
+	// eg:Set{{ToCamel .Name}}Xx(item.Xx).
+	Save(ctx)
+	
+	return u, err
+}
+
+func (repo *{{ToCamel .Name}}Repository) Update(ctx context.Context, id int, item {{ToCamel .Name}}) (*{{ToCamel .Name}}, error) {
+	u, err := repo.{{ToCamel .Name}}.UpdateOneID(id).
+	// TODO: set model field
+	// eg:Set{{ToCamel .Name}}Xx(item.Xx).
+	Select(
+	// TODO: select model field
+	).
+	Save(ctx)
+	
+	return u, err
+}
+
+func (repo *{{ToCamel .Name}}) Delete(ctx context.Context, id int) error {
+	return repo.{{ToCamel .Name}}.DeleteOneID(id).Exec(ctx)
+}

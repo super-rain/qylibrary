@@ -1,0 +1,172 @@
+package {{.PackageName}}
+
+import (
+	"context"
+	"time"
+
+	"golang.org/x/time/rate"
+
+	stdopentracing "github.com/opentracing/opentracing-go"
+	stdzipkin "github.com/openzipkin/zipkin-go"
+	"github.com/sony/gobreaker"
+	"github.com/go-kit/kit/circuitbreaker"
+	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/metrics"
+	"github.com/go-kit/kit/ratelimit"
+	"github.com/go-kit/kit/tracing/opentracing"
+	"github.com/go-kit/kit/tracing/zipkin"
+)
+
+type {{ToCamel .Name}}Set struct {
+	Load{{ToCamel .Name}}Endpoint    endpoint.Endpoint
+	{{ToCamel .Name}}ListEndpoint endpoint.Endpoint
+	Add{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	Change{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	Delete{{ToCamel .Name}}Endpoint endpoint.Endpoint
+}
+
+func New(svc {{ToCamel .Name}}Service, logger log.Logger, duration metrics.Histogram, otTracer stdopentracing.Tracer, zipkinTracer *stdzipkin.Tracer) {{ToCamel .Name}}Set {
+	var load{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	{
+		load{{ToCamel .Name}}Endpoint = makeLoad{{ToCamel .Name}}Endpoint(svc)
+		// middleware
+		// ratelimit
+		load{{ToCamel .Name}}Endpoint = ratelimit.NewErroringLimiter(rate.NewLimiter(rate.Every(time.Second), 1))(load{{ToCamel .Name}}Endpoint)
+		// circuitbreaker
+		load{{ToCamel .Name}}Endpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{}))(load{{ToCamel .Name}}Endpoint)
+		// tracing
+		load{{ToCamel .Name}}Endpoint = opentracing.TraceServer(otTracer, "{{ToCamel .Name}}Service.Get")(load{{ToCamel .Name}}Endpoint)
+		if zipkinTracer != nil {
+			load{{ToCamel .Name}}Endpoint = zipkin.TraceEndpoint(zipkinTracer, "{{ToCamel .Name}}Service.Get")(load{{ToCamel .Name}}Endpoint)
+		}
+		// logging
+		load{{ToCamel .Name}}Endpoint = LoggingMiddleware(log.With(logger, "method", "{{ToCamel .Name}}Service.Get"))(load{{ToCamel .Name}}Endpoint)
+		// metrics
+		load{{ToCamel .Name}}Endpoint = InstrumentingMiddleware(duration.With("method", "{{ToCamel .Name}}Service.Get"))(load{{ToCamel .Name}}Endpoint)
+	}
+	var {{.Name}}ListEndpoint endpoint.Endpoint
+	{
+		{{.Name}}ListEndpoint = make{{ToCamel .Name}}ListEndpoint(svc)
+		// middleware
+		// ratelimit
+		{{.Name}}ListEndpoint = ratelimit.NewErroringLimiter(rate.NewLimiter(rate.Limit(1), 100))({{.Name}}ListEndpoint)
+		// circuitbreaker
+		{{.Name}}ListEndpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{}))({{.Name}}ListEndpoint)
+		// tracing
+		{{.Name}}ListEndpoint = opentracing.TraceServer(otTracer, "{{ToCamel .Name}}Service.GetAll")({{.Name}}ListEndpoint)
+		if zipkinTracer != nil {
+			{{.Name}}ListEndpoint = zipkin.TraceEndpoint(zipkinTracer, "{{ToCamel .Name}}Service.GetAll")({{.Name}}ListEndpoint)
+		}
+		// logging
+		{{.Name}}ListEndpoint = LoggingMiddleware(log.With(logger, "method", "{{ToCamel .Name}}Service.GetAll"))({{.Name}}ListEndpoint)
+		// metrics
+		{{.Name}}ListEndpoint = InstrumentingMiddleware(duration.With("method", "{{ToCamel .Name}}Service.GetAll"))({{.Name}}ListEndpoint)
+	}
+	var add{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	{
+		add{{ToCamel .Name}}Endpoint = makeAdd{{ToCamel .Name}}Endpoint(svc)
+		// middleware
+		// ratelimit
+		add{{ToCamel .Name}}Endpoint = ratelimit.NewErroringLimiter(rate.NewLimiter(rate.Limit(1), 100))(add{{ToCamel .Name}}Endpoint)
+		// circuitbreaker
+		add{{ToCamel .Name}}Endpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{}))(add{{ToCamel .Name}}Endpoint)
+		// tracing
+		add{{ToCamel .Name}}Endpoint = opentracing.TraceServer(otTracer, "{{ToCamel .Name}}Service.Add")(add{{ToCamel .Name}}Endpoint)
+		if zipkinTracer != nil {
+			add{{ToCamel .Name}}Endpoint = zipkin.TraceEndpoint(zipkinTracer, "{{ToCamel .Name}}Service.Add")(add{{ToCamel .Name}}Endpoint)
+		}
+		// logging
+		add{{ToCamel .Name}}Endpoint = LoggingMiddleware(log.With(logger, "method", "{{ToCamel .Name}}Service.Add"))(add{{ToCamel .Name}}Endpoint)
+		// metrics
+		add{{ToCamel .Name}}Endpoint = InstrumentingMiddleware(duration.With("method", "{{ToCamel .Name}}Service.Add"))(add{{ToCamel .Name}}Endpoint)
+	}
+	var change{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	{
+		change{{ToCamel .Name}}Endpoint = makeChange{{ToCamel .Name}}Endpoint(svc)
+		// middleware
+		// ratelimit
+		change{{ToCamel .Name}}Endpoint = ratelimit.NewErroringLimiter(rate.NewLimiter(rate.Limit(1), 100))(change{{ToCamel .Name}}Endpoint)
+		// circuitbreaker
+		change{{ToCamel .Name}}Endpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{}))(change{{ToCamel .Name}}Endpoint)
+		// tracing
+		change{{ToCamel .Name}}Endpoint = opentracing.TraceServer(otTracer, "{{ToCamel .Name}}Service.Edit")(change{{ToCamel .Name}}Endpoint)
+		if zipkinTracer != nil {
+			change{{ToCamel .Name}}Endpoint = zipkin.TraceEndpoint(zipkinTracer, "{{ToCamel .Name}}Service.Edit")(change{{ToCamel .Name}}Endpoint)
+		}
+		// logging
+		change{{ToCamel .Name}}Endpoint = LoggingMiddleware(log.With(logger, "method", "{{ToCamel .Name}}Service.Edit"))(change{{ToCamel .Name}}Endpoint)
+		// metrics
+		change{{ToCamel .Name}}Endpoint = InstrumentingMiddleware(duration.With("method", "{{ToCamel .Name}}Service.Edit"))(change{{ToCamel .Name}}Endpoint)
+	}
+	var delete{{ToCamel .Name}}Endpoint endpoint.Endpoint
+	{
+		delete{{ToCamel .Name}}Endpoint = makeDelete{{ToCamel .Name}}Endpoint(svc)
+		// middleware
+		// ratelimit
+		delete{{ToCamel .Name}}Endpoint = ratelimit.NewErroringLimiter(rate.NewLimiter(rate.Limit(1), 100))(delete{{ToCamel .Name}}Endpoint)
+		// circuitbreaker
+		delete{{ToCamel .Name}}Endpoint = circuitbreaker.Gobreaker(gobreaker.NewCircuitBreaker(gobreaker.Settings{}))(delete{{ToCamel .Name}}Endpoint)
+		// tracing
+		delete{{ToCamel .Name}}Endpoint = opentracing.TraceServer(otTracer, "{{ToCamel .Name}}Service.Delete")(delete{{ToCamel .Name}}Endpoint)
+		if zipkinTracer != nil {
+			delete{{ToCamel .Name}}Endpoint = zipkin.TraceEndpoint(zipkinTracer, "{{ToCamel .Name}}Service.Delete")(delete{{ToCamel .Name}}Endpoint)
+		}
+		// logging
+		delete{{ToCamel .Name}}Endpoint = LoggingMiddleware(log.With(logger, "method", "{{ToCamel .Name}}Service.Delete"))(delete{{ToCamel .Name}}Endpoint)
+		// metrics
+		delete{{ToCamel .Name}}Endpoint = InstrumentingMiddleware(duration.With("method", "{{ToCamel .Name}}Service.Delete"))(delete{{ToCamel .Name}}Endpoint)
+	}
+
+	return {{ToCamel .Name}}Set{
+		Load{{ToCamel .Name}}Endpoint: load{{ToCamel .Name}}Endpoint,
+		{{ToCamel .Name}}ListEndpoint: {{.Name}}ListEndpoint,
+		Add{{ToCamel .Name}}Endpoint: add{{ToCamel .Name}}Endpoint,
+		Change{{ToCamel .Name}}Endpoint: change{{ToCamel .Name}}Endpoint,
+		Delete{{ToCamel .Name}}Endpoint: delete{{ToCamel .Name}}Endpoint,
+	}
+}
+
+// TODO: public:允许外网访问，internal:内部访问，支持后台服务间调用/高级聚合接口/内部服务调用/分布式事务
+func make{{ToCamel .Name}}ListEndpoint(s {{ToCamel .Name}}Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		list, err := s.GetAll(ctx)
+		if err != nil {
+			// TODO:错误向上抛出
+			return nil,err
+		}
+		return list, nil
+	}
+}
+
+func makeLoad{{ToCamel .Name}}Endpoint(s {{ToCamel .Name}}Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(Load{{ToCamel .Name}}Param)
+		l, err := s.Get(ctx, req)
+		return l, err
+	}
+}
+
+func makeAdd{{ToCamel .Name}}Endpoint(s {{ToCamel .Name}}Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.({{ToCamel .Name}}RequestData)
+		err := s.Add(ctx, req.Item)
+		return nil, err
+	}
+}
+
+func makeChange{{ToCamel .Name}}Endpoint(s {{ToCamel .Name}}Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.({{ToCamel .Name}}RequestData)
+		err := s.Edit(ctx, req.ID, req.Item)
+		return nil, err
+	}
+}
+
+func makeDelete{{ToCamel .Name}}Endpoint(s {{ToCamel .Name}}Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.({{ToCamel .Name}}RequestData)
+		err := s.Delete(ctx, req.ID)
+		return nil, err
+	}
+}
