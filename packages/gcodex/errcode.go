@@ -5,6 +5,7 @@ import (
 )
 
 var (
+	ErrInvalidParams           = errors.New("invalid params.")
 	ErrInvalidSchemaOption     = errors.New("invalid schema option.")
 	ErrIDLFileNotExists        = errors.New("IDL file not exists.")
 	ErrInitIDLMetadata         = errors.New("loading IDL tmpl fail.")
