@@ -6,15 +6,15 @@
 1. Go Version 1.13+
 2. 使用该库需要设置如下环境变量
    ```
-   GOPROXY=http://goproxy.qingting-hz.com
+   GOPROXY=http://xxxxx.com
    
    GOSUMDB=off
    ```
 3. 可通过如下指令引入依赖库
    ```
-   go get git2.qingtingfm.com/neirong/library
+   go get xxxx
    ```
-4. 如有其他问题，欢迎提[Issue](https://git2.qingtingfm.com/neirong/library/issues/new)
+4. 如有其他问题，欢迎提[Issue]
 
 ## 目录
 
@@ -55,4 +55,4 @@
 
 ## 版本说明
 
-[版本说明](https://git2.qingtingfm.com/neirong/library/releases)
+[版本说明]
