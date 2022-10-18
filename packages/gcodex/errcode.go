@@ -5,13 +5,13 @@ import (
 )
 
 var (
-	ErrInvalidParams           = errors.New("invalid params.")
-	ErrInvalidSchemaOption     = errors.New("invalid schema option.")
-	ErrIDLFileNotExists        = errors.New("IDL file not exists.")
-	ErrInitIDLMetadata         = errors.New("loading IDL tmpl fail.")
-	ErrInvalidIDLMetadata      = errors.New("invalid IDL metadata.")
-	ErrInvalidEntitiesMetadata = errors.New("invalid entities metadata.")
-	ErrDBHasEmptyTable         = errors.New("DB has empty table .")
+	ErrInvalidParams           = errors.New("invalid params ")
+	ErrInvalidSchemaOption     = errors.New("invalid schema option ")
+	ErrIDLFileNotExists        = errors.New("IDL file not exists ")
+	ErrInitIDLMetadata         = errors.New("loading IDL tmpl fail ")
+	ErrInvalidIDLMetadata      = errors.New("invalid IDL metadata ")
+	ErrInvalidEntitiesMetadata = errors.New("invalid entities metadata ")
+	ErrDBHasEmptyTable         = errors.New("DB has empty table ")
 )
 
 // // 0～100 common code,>=1000 biz code

@@ -13,8 +13,8 @@ var uppercaseAcronym = map[string]string{
 }
 
 var (
-	backendSpec  = []string{"cmd", "config", "idl", "docs/rfc", "docs/uml", "internal", "scripts"}
-	frontendSpec = []string{}
+	backendSpec = []string{"cmd", "config", "idl", "docs/rfc", "docs/uml", "internal", "scripts"}
+	// frontendSpec = []string{}
 	funcTmplList = []string{"main.tmpl", "repos.tmpl", "services.tmpl", "endpoints.tmpl", "transports.tmpl", "types.tmpl", "errors.tmpl", "middleware.tmpl"}
 	tmplFilePath = "./tmpl/"
 )

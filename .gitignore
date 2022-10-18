@@ -18,8 +18,7 @@ vendor/
 *.DS_Store
 *.drawio
 .drawio-chrome
+.drawio-chrome/
 .vscode
 .vscode/?
 .vscode/
-.drawio-chrome
-.drawio-chrome/
