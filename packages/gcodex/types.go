@@ -9,11 +9,14 @@ import "time"
 //	GenKindMult GenKind
 //
 // )
+
+type APPKind string
+
 const (
-	APPBackend = iota
-	APPFrontend
-	APPService
-	APPGrpc
+	APPBackend  APPKind = "backend"
+	APPFrontend         = "frontend"
+	APPService          = "service"
+	APPGrpc             = "grpc"
 )
 
 var uppercaseAcronym = map[string]string{
