@@ -8,12 +8,12 @@ import (
 
 func Test_genSchemaCode(t *testing.T) {
 	tbs := []*TableMetaData{
-		&TableMetaData{
+		{
 			PackageName: "schema",
 			Name:        "user",
 			Comment:     "用户表",
 			Columns: []*ColumnType{
-				&ColumnType{
+				{
 					Name:       "user_name",
 					StructTag:  "user_name",
 					StorageKey: "user_name",
@@ -24,7 +24,7 @@ func Test_genSchemaCode(t *testing.T) {
 					IsUnique:   true,
 					UidxName:   "uidx_user_name",
 				},
-				&ColumnType{
+				{
 					Name:          "age",
 					StructTag:     "age",
 					StorageKey:    "age",
@@ -51,7 +51,7 @@ func Test_genSchemaCode(t *testing.T) {
 					IsIndex:      true,
 					IdxName:      "idxname",
 				},
-				&ColumnType{
+				{
 					Name:          "una2",
 					StructTag:     "una2",
 					StorageKey:    "una2",
@@ -79,7 +79,7 @@ func Test_genSchemaCode(t *testing.T) {
 					IsIndex:      true,
 					IdxName:      "idxname",
 				},
-				// &ColumnType{
+				// {
 				// 	Name:       "password",
 				// 	StorageKey: "pwd",
 				// 	Comment:    "密码",
@@ -87,7 +87,7 @@ func Test_genSchemaCode(t *testing.T) {
 				// 	DefaultVal: "",
 				// 	MaxLen:     64,
 				// },
-				// &ColumnType{
+				// {
 				// 	Name:        "salt",
 				// 	StructTag:   "salt",
 				// 	StorageKey:  "salt",
@@ -99,7 +99,7 @@ func Test_genSchemaCode(t *testing.T) {
 				// 	IsImmutable: true,
 				// 	IsOptional:  true,
 				// },
-				// &ColumnType{
+				// {
 				// 	Name:        "avatar",
 				// 	StructTag:   "avatar",
 				// 	StorageKey:  "avatar",
@@ -111,7 +111,7 @@ func Test_genSchemaCode(t *testing.T) {
 				// 	IsImmutable: true,
 				// 	IsOptional:  false,
 				// },
-				// &ColumnType{
+				// {
 				// 	Name:       "user_code",
 				// 	Comment:    "用户码",
 				// 	FieldType:  TypeString,
@@ -120,7 +120,7 @@ func Test_genSchemaCode(t *testing.T) {
 				// 	MinLen:     10,
 				// 	IsOptional: false,
 				// },
-				// &ColumnType{
+				// {
 				// 	Name:        "phone",
 				// 	Comment:     "联系方式",
 				// 	FieldType:   TypeString,
@@ -128,7 +128,7 @@ func Test_genSchemaCode(t *testing.T) {
 				// 	MaxLen:      16,
 				// 	IsImmutable: true,
 				// },
-				// &ColumnType{
+				// {
 				// 	Name:        "is_deleted",
 				// 	StructTag:   "is_deleted",
 				// 	StorageKey:  "is_deleted",
@@ -139,7 +139,7 @@ func Test_genSchemaCode(t *testing.T) {
 				// 	Enumerable:  false,
 				// 	IsIndex:     true,
 				// },
-				// &ColumnType{
+				// {
 				// 	Name:          "status",
 				// 	StructTag:     "status",
 				// 	StorageKey:    "status",
@@ -153,7 +153,7 @@ func Test_genSchemaCode(t *testing.T) {
 				// 	IsIndex:       true,
 				// 	IdxName:       "idx_status",
 				// },
-				&ColumnType{
+				{
 					Name:          "balance",
 					StructTag:     "balance",
 					StorageKey:    "balance",
@@ -166,7 +166,7 @@ func Test_genSchemaCode(t *testing.T) {
 					EnumVals:      "1.1,2.2,3.3",
 					Enumerable:    true,
 				},
-				&ColumnType{
+				{
 					Name:          "balance2",
 					StructTag:     "balance2",
 					StorageKey:    "balance2",
@@ -177,7 +177,7 @@ func Test_genSchemaCode(t *testing.T) {
 					Scale:         2,
 					Precision:     10,
 				},
-				&ColumnType{
+				{
 					Name:       "last_login_time",
 					StructTag:  "last_login_time",
 					StorageKey: "last_login_time",
@@ -187,7 +187,7 @@ func Test_genSchemaCode(t *testing.T) {
 					IsIndex:    true,
 					IdxName:    "idx_last_login_time",
 				},
-				// &ColumnType{
+				// &{
 				// 	Name:        "created_at",
 				// 	StructTag:   "created_at",
 				// 	StorageKey:  "last_login_time",
@@ -198,7 +198,7 @@ func Test_genSchemaCode(t *testing.T) {
 				// 	IsIndex:     true,
 				// 	IdxName:     "idx_created_at",
 				// },
-				// &ColumnType{
+				// &{
 				// 	Name:        "updated_at",
 				// 	StructTag:   "updated_at",
 				// 	StorageKey:  "updated_at",
@@ -210,15 +210,15 @@ func Test_genSchemaCode(t *testing.T) {
 				// },
 			},
 			Edges: []*ModelRelationShip{
-				&ModelRelationShip{
+				{
 					To:     "UserTag",
 					ToName: "tags",
 				},
-				&ModelRelationShip{
+				{
 					To:     "UserTask",
 					ToName: "tasks",
 				},
-				&ModelRelationShip{
+				{
 					FromName: "groups",
 					From:     "Group",
 					RefName:  "users",
@@ -227,12 +227,12 @@ func Test_genSchemaCode(t *testing.T) {
 				},
 			},
 		},
-		&TableMetaData{
+		{
 			PackageName: "schema",
 			Name:        "user_tag",
 			Comment:     "标签表",
 			Columns: []*ColumnType{
-				&ColumnType{
+				{
 					Name:       "user_id",
 					StructTag:  "uid",
 					StorageKey: "uid",
@@ -243,7 +243,7 @@ func Test_genSchemaCode(t *testing.T) {
 					IsUnique:   true,
 					UidxName:   "uidx_user_id",
 				},
-				&ColumnType{
+				{
 					Name:         "tag",
 					StructTag:    "tag",
 					StorageKey:   "tag",
@@ -265,11 +265,11 @@ func Test_genSchemaCode(t *testing.T) {
 				},
 			},
 			Edges: []*ModelRelationShip{
-				&ModelRelationShip{
+				{
 					To:     "User",
 					ToName: "users",
 				},
-				&ModelRelationShip{
+				{
 					FromName: "owner",
 					From:     "User",
 					RefName:  "tags",
