@@ -4,9 +4,17 @@ import "time"
 
 // type GenKind uint8
 // const(
-// 	GenKindSignal GenKind =itoa
-// 	GenKindMult GenKind
+//
+//	GenKindSignal GenKind =itoa
+//	GenKindMult GenKind
+//
 // )
+const (
+	APPBackend = iota
+	APPFrontend
+	APPService
+	APPGrpc
+)
 
 var uppercaseAcronym = map[string]string{
 	"ID": "id",
