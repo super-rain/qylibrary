@@ -1,0 +1,536 @@
+# 数据库
+[[DB]]
+Name="top_starter"
+Comment="标杆动力"
+
+# 表
+[[DB.Tables]]
+Name="user"
+Comment="用户表"
+# 列集合
+Columns=[
+    {Name="user_id",StructTag="user_id",StorageKey="user_id",FieldType="int",AutoInc=true,IsNonNegative=false,DefaultVal=0,IsImmutable=false,IsOptional=true,Enumerable=false,IsPrimary=true,PkName="pk_user_id",Comment="用户ID"},
+    {Name="user_name",StructTag="user_name",StorageKey="user_name",FieldType="string",MaxLen=64,MinLen=0,AutoInc=false,IsNonNegative=false,DefaultVal="",   IsSensitive=false,IsImmutable=false,IsOptional=true,Enumerable=false,  IsPrimary=false,PkName="",IsForeignKey=false,FkName="",IsIndex=true,IdxName="idx_user_name",Comment="用户名"},
+    {Name="pwd",StructTag="pwd",StorageKey="pwd",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsImmutable=false,IsOptional=true,Comment="密码"},
+    {Name="salt",StructTag="salt",StorageKey="salt",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="密码盐"},
+    {Name="pay_pwd",StructTag="pay_pwd",StorageKey="pay_pwd",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsImmutable=false,IsOptional=true,Comment="支付密码"},
+    {Name="nick_name",StructTag="nick_name",StorageKey="nick_name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsOptional=true,Comment="昵称"},
+    {Name="avatar",StructTag="avatar",StorageKey="avatar",FieldType="string",MaxLen=1024,MinLen=0,DefaultVal="",IsOptional=true,IsSensitive=false,IsImmutable=false,Comment="头像"},
+    {Name="user_code",StructTag="user_code",StorageKey="user_code",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsOptional=true,IsUnique=true,UidxName="uidx_user_code",Comment="用户码"},
+    {Name="phone",StructTag="phone",StorageKey="phone",FieldType="string",MaxLen=16,MinLen=0,DefaultVal="",IsOptional=true,IdxName="idx_phone",Comment="手机号"},
+    {Name="email",StructTag="email",StorageKey="email",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsOptional=true,IsIndex=true,IdxName="idx_email",Comment="联系邮箱"},
+    {Name="is_deleted",StructTag="is_deleted",StorageKey="is_deleted",FieldType="bool",IsOptional=true,DefaultVal=0,IdxName="idx_is_deleted",Comment="是否删除"},
+    {Name="status",StructTag="status",StorageKey="status",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2],IdxName="idx_status",Comment="状态"},
+    {Name="last_login_time",StructTag="last_login_time",StorageKey="last_login_time",FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true,IdxName="idx_last_login_time",Comment="最后登录时间"},
+    {Name="operator",StructTag="operator",StorageKey="operator",FieldType="string", MaxLen=64,MinLen=0,DefaultVal="",IsOptional=true,Comment="操作人"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+Edges=[{From="tag",FromName="tags",To="pet",ToName="pets",RefName="user"},{To="group",ToName="groups",RefName="user"}]
+
+[[DB.Tables]]
+Name="user_basic"
+Comment="用户基础信息"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="user_id",StructTag="user_id",StorageKey="user_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsForeignKey=true,FkName="fk_user_id",IsUnique=true,UidxName="uidx_user_id",Comment="用户ID"},
+    {Name="real_name",StructTag="real_name",StorageKey="real_name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_real_name",Comment="姓名"},
+    {Name="sex",StructTag="sex",StorageKey="sex",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2],Comment="性别,0:未知;1:男;2:女"},
+    {Name="birthday",StructTag="birthday",StorageKey="birthday",FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="出生日期"},
+    {Name="id_card",StructTag="id_card",StorageKey="id_card",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,IsUnique=true,UidxName="uidx_id_card",Comment="身份证"},
+    {Name="begin_time",StructTag="begin_time",StorageKey="begin_time",  FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="开始时间"},
+    {Name="expire_time",StructTag="expire_time",StorageKey="expire_time",  FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="过期时间"},
+    {Name="idcard_face_img",StructTag="idcard_face_img",StorageKey="idcard_face_img",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="身份证人脸图片"},
+    {Name="idcard_emblem_img",StructTag="id_card",StorageKey="id_card",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="身份证国徽图片"},
+    {Name="telphone",StructTag="telphone",StorageKey="telphone",FieldType="string",MaxLen=16,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,IdxName="idx_phone",Comment="联系手机号"},
+    {Name="email",StructTag="email",StorageKey="email",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="联系邮箱"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="user_account"
+Comment="用户余额账户"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="user_id",StructTag="user_id",StorageKey="user_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsForeignKey=true,FkName="fk_user_id",IsIndex=true,IdxName="idx_user_id",Comment="用户ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="账户名称"},
+    {Name="balance",StructTag="balance",StorageKey="balance",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="余额"},
+    {Name="tax_ratio",StructTag="tax_ratio",StorageKey="tax_ratio",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="费率"},
+    {Name="extra_fee",StructTag="extra_fee",StorageKey="extra_fee",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="附加费"},
+    {Name="remark",StructTag="remark",StorageKey="remark",FieldType="string",MaxLen=256,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment=" 备注"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="user_account_record"
+Comment="用户余额变动记录"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="account_id",StructTag="account_id",StorageKey="account_id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsForeignKey=true,FkName="fk_account_id",Comment="account_id"},
+    {Name="kind",StructTag="kind",StorageKey="kind",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2],Comment="种类,0:余额;1:费率;2:手续费"},
+    {Name="amount",StructTag="amount",StorageKey="amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="变动金额"},
+    {Name="before_balance",StructTag="before_balance",StorageKey="before_balance",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="变动前余额"},
+    {Name="remark",StructTag="remark",StorageKey="remark",FieldType="string",MaxLen=256,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment=" 备注"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="user_level"
+Comment="用户等级"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="user_id",StructTag="user_id",StorageKey="user_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsForeignKey=true,FkName="fk_user_id",IsIndex=true,IdxName="idx_user_id",Comment="用户ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="账户名称"},
+    {Name="level",StructTag="level",StorageKey="level",FieldType="int",DefaultVal=0,MaxLen=8,MinLen=0,IsOptional=true,Comment="级别"},
+    {Name="growth_value",StructTag="growth_value",StorageKey="growth_value",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="成长值"},
+    {Name="remark",StructTag="remark",StorageKey="remark",FieldType="string",MaxLen=256,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment=" 备注"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="user_reward"
+Comment="用户奖励表"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="user_id",StructTag="user_id",StorageKey="user_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsForeignKey=true,FkName="fk_user_id",IsIndex=true,IdxName="idx_user_id",Comment="用户ID"},
+    {Name="task_id",StructTag="task_id",StorageKey="task_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true,IdxName="idx_task_id",Comment="任务ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="reward_kind",StructTag="reward_kind",StorageKey="reward_kind",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1],IsIndex=true,IdxName="idx_reward_kind",Comment="种类,0:growth_value;"},
+    {Name="reward_value",StructTag="reward_value",StorageKey="reward_value",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="奖励值"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="tag"
+Comment="标签表"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="上级ID"},
+    {Name="code",StructTag="code",StorageKey="code",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsOptional=true,IsUnique=true,UidxName="uidx_code",Comment="代码"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名称"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="user_tag"
+Comment="用户标签"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="user_id",StructTag="user_id",StorageKey="user_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsForeignKey=true,FkName="fk_user_id",IsIndex=true,IdxName="idx_user_id",Comment="用户ID"},
+    {Name="code",StructTag="code",StorageKey="code",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsOptional=true,IsIndex=true,IdxName="idx_code",Comment="代码"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="template"
+Comment="任务模版"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="tmpl_type",StructTag="tmpl_type",StorageKey="tmpl_type",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2,3],Comment="模版类型,0:pdca;1:scrum;2:waterfall;3:kanban"},
+    {Name="code",StructTag="code",StorageKey="code",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsOptional=true,IsIndex=true,IdxName="idx_code",Comment="代码"},
+    {Name="content",StructTag="content",StorageKey="content",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="content"},
+    {Name="desc",StructTag="desc",StorageKey="desc",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="描述"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="task_group"
+Comment="分组类"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="上级ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="task_count",StructTag="task_count",StorageKey="task_count",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="任务数量"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="task"
+Comment="任务表"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="owner_id",StructTag="owner_id",StorageKey="owner_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true,IdxName="idx_owner_id",Comment="负责人ID"},
+    {Name="group_id",StructTag="group_id",StorageKey="group_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="分组ID"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="上级ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="cover_img",StructTag="cover_img",StorageKey="cover_img",FieldType="string",MaxLen=1024,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="封面"},
+    {Name="begin_time",StructTag="begin_time",StorageKey="begin_time",FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true,IdxName="idx_begin_time",Comment="开始时间"},
+    {Name="end_time",StructTag="end_time",StorageKey="end_time",FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true,IdxName="idx_end_time",Comment="结束时间"},
+    {Name="priority",StructTag="priority",StorageKey="priority",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2,3],Comment="优先级,0:重要不紧急;1:重要且紧急;2:不重要不紧急;3:不重要但紧急"},
+    {Name="content",StructTag="content",StorageKey="content",FieldType="string",MaxLen=256,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="内容"},
+    {Name="address",StructTag="address",StorageKey="address",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="地址"},
+    {Name="poi",StructTag="poi",StorageKey="poi",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="poi"},
+    {Name="completion",StructTag="completion",StorageKey="completion",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="总完成度"},
+    {Name="is_deleted",StructTag="is_deleted",StorageKey="is_deleted",FieldType="bool",IsOptional=true,DefaultVal=0,IdxName="idx_is_deleted",Comment="是否删除"},
+    {Name="status",StructTag="status",StorageKey="status",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2,3],IdxName="idx_status",Comment="状态,0:new;1:doing;2:done;3:closed;"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="task_schedule"
+Comment="任务计划表"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="父ID"},
+    {Name="task_id",StructTag="task_id",StorageKey="task_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true,IdxName="idx_task_id",Comment="活动ID"},
+    {Name="template_id",StructTag="template_id",StorageKey="template_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true,IdxName="idx_template_id",Comment="模版ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名称"},
+    {Name="content",StructTag="content",StorageKey="content",FieldType="string",MaxLen=256,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="内容"},
+    {Name="stage",StructTag="stage",StorageKey="stage",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2,3],Comment="阶段,0:plan;1:do;2:check;3:act"},
+    {Name="cost",StructTag="cost",StorageKey="cost",FieldType="cost",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="成本"},
+    {Name="benefit",StructTag="benefit",StorageKey="benefit",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="收益"},
+    {Name="begin_time",StructTag="begin_time",StorageKey="begin_time",FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="开始时间"},
+    {Name="expected_time",StructTag="expected_time",StorageKey="expected_time",FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="预期时间"},
+    {Name="completed_time",StructTag="completed_time",StorageKey="completed_time",FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="完成时间"},
+    {Name="done_percentage",StructTag="done_percentage",StorageKey="done_percentage",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="完成百分比"},
+    {Name="repeat_count",StructTag="repeat_count",StorageKey="repeat_count",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Comment="重复次数"},
+    {Name="status",StructTag="status",StorageKey="status",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2,3],IdxName="idx_status",Comment="状态,0:new;1:doing;2:done;3:canceled;"},
+    {Name="operator",StructTag="operator",StorageKey="operator",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsOptional=true,Comment="操作人"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="task_metric"
+Comment="任务指标"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="schedule_id",StructTag="schedule_id",StorageKey="schedule_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="计划ID"},
+    {Name="field_key",StructTag="field_key",StorageKey="field_key",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="key"},
+    {Name="field_value",StructTag="field_value",StorageKey="field_value",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="值"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="task_bom"
+Comment="物料清单"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="上级ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="bom_code",StructTag="bom_code",StorageKey="bom_code",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_bom_code",Comment="编码"},
+    {Name="spec",StructTag="spec",StorageKey="spec",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_spec",Comment="规格"},
+    {Name="count",StructTag="count",StorageKey="count",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="数量"},
+    {Name="bom_unit",StructTag="bom_unit",StorageKey="bom_unit",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="单位"},
+    {Name="bom_url",StructTag="bom_url",StorageKey="bom_url",FieldType="string",MaxLen=1024,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="物料地址"},
+    {Name="desc",StructTag="desc",StorageKey="desc",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="描述"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="cost_budget"
+Comment="成本预算"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="上级ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="task_count",StructTag="task_count",StorageKey="task_count",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="任务数量"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="task_team"
+Comment="任务团队成员"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="leader_id",StructTag="leader_id",StorageKey="leader_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true,IdxName="idx_leader_id",Comment="队长ID"},
+    {Name="user_id",StructTag="user_id",StorageKey="user_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="用户ID"},
+    {Name="task_id",StructTag="task_id",StorageKey="task_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true,IdxName="idx_task_id",Comment="任务ID"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="task_msg"
+Comment="任务消息"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="task_id",StructTag="task_id",StorageKey="task_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true,IdxName="idx_task_id",Comment="活动ID"},
+    {Name="from",StructTag="from",StorageKey="from",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_from",Comment="发送方"},
+    {Name="to",StructTag="to",StorageKey="to",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_to",Comment="接收方"},
+    {Name="title",StructTag="title",StorageKey="title",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="msg_type",StructTag="msg_type",StorageKey="msg_type",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2,3],Comment="消息类型,0:remid;1:done;2:delay;3:reward"},
+    {Name="content",StructTag="content",StorageKey="content",FieldType="string",MaxLen=128,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="content"},
+    {Name="is_read",StructTag="is_read",StorageKey="is_read",FieldType="bool",IsOptional=true,DefaultVal=0,IdxName="idx_is_read",Comment="是否已读"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="sku_img"
+Comment="sku图片"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="sku_id",StructTag="sku_id",StorageKey="sku_id",FieldType="int",DefaultVal=0,IsOptional=true,Comment="skuID"},
+    {Name="thumbnail_img",StructTag="thumbnail_img",StorageKey="thumbnail_img",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="缩略图"},
+    {Name="middle_img",StructTag="middle_img",StorageKey="middle_img",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="中图"},
+    {Name="original_img",StructTag="original_img",StorageKey="original_img",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="原图"},
+    {Name="sort",StructTag="sort",StorageKey="sort",FieldType="int",DefaultVal=0,IsSensitive=false,IsOptional=true,Comment="排序"}
+]
+
+[[DB.Tables]]
+Name="sku"
+Comment="sku"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="product_id",StructTag="product_id",StorageKey="product_id",FieldType="int",DefaultVal=0,IsOptional=true,Comment="商品ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名称"},
+    {Name="brand",StructTag="brand",StorageKey="brand",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="品牌"},
+    {Name="color",StructTag="color",StorageKey="color",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="颜色"},
+    {Name="spec",StructTag="spec",StorageKey="spec",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="规格"},
+    {Name="cost",StructTag="cost",StorageKey="cost",FieldType="cost",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="成本"},
+    {Name="original_price",StructTag="original_price",StorageKey="original_price",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="原价"},
+    {Name="price",StructTag="price",StorageKey="price",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="单价"},
+    {Name="sold_stock",StructTag="sold_stock",StorageKey="sold_stock",FieldType="uint",DefaultVal=0,IsSensitive=false,IsOptional=true,Comment="已售库存"},
+    {Name="total_stock",StructTag="total_stock",StorageKey="total_stock",FieldType="int",DefaultVal=0,IsSensitive=false,IsOptional=true,Comment="库存"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="category"
+Comment="产品分类"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="父ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名称"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="product"
+Comment="产品"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="merchant_id",StructTag="merchant_id",StorageKey="merchant_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_merchant_id",Comment="商户ID"},
+    {Name="category_id",StructTag="category_id",StorageKey="category_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="分类ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名称"},
+    {Name="desc",StructTag="desc",StorageKey="desc",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="描述"},
+    {Name="begin_time",StructTag="begin_time",StorageKey="begin_time",  FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="开始时间"},
+    {Name="end_time",StructTag="end_time",StorageKey="end_time",  FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="结束时间"},
+    {Name="sort",StructTag="sort",StorageKey="sort",FieldType="int",DefaultVal=0,IsSensitive=false,IsOptional=true,Comment="排序"},
+    {Name="operator",StructTag="operator",StorageKey="operator",FieldType="string", MaxLen=64,MinLen=0,DefaultVal="",IsOptional=true,Comment="操作人"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="order"
+Comment="订单"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="order_no",StructTag="order_no",StorageKey="order_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsUnique=true,UidxName="uidx_order_no",Comment="订单编号"},
+    {Name="merchant_id",StructTag="merchant_id",StorageKey="merchant_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_merchant_id",Comment="商户ID"},
+    {Name="product_id",StructTag="product_id",StorageKey="product_id",FieldType="int",DefaultVal=0,IsOptional=true,Comment="商品ID"},
+    {Name="activity_id",StructTag="activity_id",StorageKey="activity_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsForeignKey=true,FkName="fk_activity_id",IsIndex=true,IdxName="idx_activity_id",Comment="活动ID"},
+    {Name="original_amount",StructTag="original_amount",StorageKey="original_amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="原价"},
+    {Name="subtotal",StructTag="subtotal",StorageKey="subtotal",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="小计"},
+    {Name="total",StructTag="total",StorageKey="total",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="总计"},
+    {Name="amount",StructTag="amount",StorageKey="amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="实付"},
+    {Name="shipping_fee",StructTag="shipping_fee",StorageKey="shipping_fee",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="运费"},
+    {Name="discount",StructTag="discount",StorageKey="discount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="折扣"},
+    {Name="packing_charge",StructTag="packing_charge",StorageKey="packing_charge",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="包装费"},
+    {Name="extra_fee",StructTag="extra_fee",StorageKey="extra_fee",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="附加费"},
+    {Name="is_invoice",StructTag="is_invoice",StorageKey="is_invoice",  FieldType="bool",IsOptional=true,DefaultVal=0, IdxName="idx_is_invoice",Comment="是否开发票"},
+    {Name="status",StructTag="status",StorageKey="status",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2],    IdxName="idx_status",Comment="状态,0:new;1:paid;2:shipping;3:successed;4:failed;5:canceled;6:refund"},
+    {Name="remark",StructTag="remark",StorageKey="remark",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="原因"},
+    {Name="paid_time",StructTag="paid_time",StorageKey="paid_time",  FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="支付时间"},
+    {Name="successed_time",StructTag="successed_time",StorageKey="successed_time",  FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="成交时间"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="payment"
+Comment="支付流水"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="serial_no",StructTag="serial_no",StorageKey="serial_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsUnique=true,UidxName="uidx_serial_no",Comment="支付流水号"},
+    {Name="order_no",StructTag="order_no",StorageKey="order_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true, IdxName="idx_order_no",Comment="订单编号"},
+    {Name="out_trade_no",StructTag="out_trade_no",StorageKey="out_trade_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="外部订单编号"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名目"},
+    {Name="merchant_id",StructTag="merchant_id",StorageKey="merchant_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_merchant_id",Comment="商户ID"},
+    {Name="shop_id",StructTag="shop_id",StorageKey="shop_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_shop_id",Comment="门店ID"},
+    {Name="trade_type",StructTag="trade_type",StorageKey="trade_type",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2],IsIndex=true,IdxName="idx_trade_type",Comment="支付类型,0:recharge;1:withdraw;2:transfer;"},
+    {Name="pay_channel",StructTag="pay_channel",StorageKey="pay_channel",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2],IsIndex=true,IdxName="idx_pay_channel",Comment="支付渠道,0:app;1:h5;2:offline;"},
+    {Name="pay_way",StructTag="pay_way",StorageKey="pay_way",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2,3,4],IsIndex=true,IdxName="idx_pay_way",Comment="支付方式,0: account;1:wxpay;2:alipay;3:cash;4:banck_card"},
+    {Name="amount",StructTag="amount",StorageKey="amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="交易金额"},
+    {Name="extra_amount",StructTag="extra_amount",StorageKey="extra_amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="额外金额"},
+    {Name="fee",StructTag="fee",StorageKey="fee",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="手续费"},
+    {Name="rate",StructTag="rate",StorageKey="rate",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="手续费率"},
+    {Name="status",StructTag="status",StorageKey="status",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2,3],IdxName="idx_status",Comment="状态,0:pedding;1:paid;2:failed;3:canceled"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="refund"
+Comment="退款"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="order_no",StructTag="order_no",StorageKey="order_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true, IdxName="idx_order_no",Comment="订单编号"},
+    {Name="serial_no",StructTag="serial_no",StorageKey="serial_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_serial_no",Comment="支付流水号"},
+    {Name="out_trade_no",StructTag="out_trade_no",StorageKey="out_trade_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="外部订单编号"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名目"},
+    {Name="merchant_id",StructTag="merchant_id",StorageKey="merchant_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_merchant_id",Comment="商户ID"},
+    {Name="shop_id",StructTag="shop_id",StorageKey="shop_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_shop_id",Comment="门店ID"},
+    {Name="pay_way",StructTag="pay_way",StorageKey="pay_way",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2,3,4],IsIndex=true,IdxName="idx_pay_way",Comment="支付方式,0: account;1:wxpay;2:alipay;3:cash;4:banck_card"},
+    {Name="amount",StructTag="amount",StorageKey="amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="交易金额"},
+    {Name="content",StructTag="content",StorageKey="content",FieldType="string",MaxLen=256,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="内容"},
+    {Name="status",StructTag="status",StorageKey="status",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2],IdxName="idx_status",Comment="状态,0:pedding;1:paid;2:failed;"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="payment_record"
+Comment="支付记录"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="serial_no",StructTag="serial_no",StorageKey="serial_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_serial_no",Comment="支付流水号"},
+    {Name="out_trade_no",StructTag="out_trade_no",StorageKey="out_trade_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="外部订单编号"},
+    {Name="from",StructTag="from",StorageKey="from",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="源账户"},
+    {Name="to",StructTag="to",StorageKey="to",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="目标账户"},
+    {Name="req_body",StructTag="req_body",StorageKey="req_body",FieldType="string",MaxLen=512,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="请求报文"},
+    {Name="res_body",StructTag="res_body",StorageKey="res_body",FieldType="string",MaxLen= 512,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="响应报文"},
+    {Name="amount",StructTag="amount",StorageKey="amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="交易金额"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="trading"
+Comment="交易"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="trade_no",StructTag="trade_no",StorageKey="trade_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsUnique=true,UidxName="uidx_trade_no",Comment="交易订单号"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名目"},
+    {Name="agent_id",StructTag="agent_id",StorageKey="agent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_agent_id",Comment="代理商ID"},
+    {Name="merchant_id",StructTag="merchant_id",StorageKey="merchant_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_merchant_id",Comment="商户ID"},
+    {Name="shop_id",StructTag="shop_id",StorageKey="shop_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_shop_id",Comment="门店ID"},
+    {Name="merchant_name",StructTag="merchant_name",StorageKey="merchant_name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="商户名称"},
+    {Name="phone",StructTag="phone",StorageKey="phone",FieldType="string",MaxLen=16,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,IdxName="idx_phone",Comment="预留手机号"},
+    {Name="sn",StructTag="sn",StorageKey="sn",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true, IdxName="idx_sn",Comment="SN"},
+    {Name="trade_card_no",StructTag="trade_card_no",StorageKey="trade_card_no",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,IsIndex=true, IdxName="idx_trade_card_no",Comment="交易卡号"},
+    {Name="trade_type",StructTag="trade_type",StorageKey="trade_type",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2,3,4],IsIndex=true,IdxName="idx_card_kind",Comment="交易类型,0:贷记卡;1:借记卡;2:支付宝扫码;3:微信扫码;4:银联云闪付;"},
+    {Name="amount",StructTag="amount",StorageKey="amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="交易金额"},
+    {Name="fee",StructTag="fee",StorageKey="fee",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="手续费"},
+    {Name="rate",StructTag="rate",StorageKey="rate",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="手续费率"},
+    {Name="discount",StructTag="discount",StorageKey="discount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="折扣"},
+    {Name="extra_fee",StructTag="extra_fee",StorageKey="extra_fee",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="附加费"},
+    {Name="sett_period",StructTag="sett_period",StorageKey="sett_period",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Comment="结算周期"},
+    {Name="receipt_url",StructTag="receipt_url",StorageKey="receipt_url",FieldType="string",MaxLen=1024,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="电子回执单"},
+    {Name="status",StructTag="status",StorageKey="status",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2,3],IdxName="idx_status",Comment="状态,0:pedding;1:paid;2:failed;3:canceled"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="settlement"
+Comment="结算"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="settlement_no",StructTag="settlement_no",StorageKey="settlement_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsUnique=true,UidxName="uidx_settlement_no",Comment="结算流水号"},
+    {Name="trade_no",StructTag="trade_no",StorageKey="trade_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_trade_no",Comment="交易订单号"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名目"},
+    {Name="merchant_id",StructTag="merchant_id",StorageKey="merchant_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_merchant_id",Comment="商户ID"},
+    {Name="shop_id",StructTag="shop_id",StorageKey="shop_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_shop_id",Comment="门店ID"},
+    {Name="upstream_sett_merchant_no",StructTag="upstream_sett_merchant_no",StorageKey="upstream_sett_merchant_no",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="上游结算商户号"},
+    {Name="alipay_sett_merchant_no",StructTag="alipay_sett_merchant_no",StorageKey="alipay_sett_merchant_no",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="alipay结算商户号"},
+    {Name="wxpay_sett_merchant_no",StructTag="wxpay_sett_merchant_no",StorageKey="wxpay_sett_merchant_no",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="wx结算商户号"},
+    {Name="account_type",StructTag="account_type",StorageKey="account_type",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1],Comment="账户类型,0:对私;1:对公"},
+    {Name="account_name",StructTag="account_name",StorageKey="account_name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="开户人"},
+    {Name="bank_type",StructTag="bank_type",StorageKey="bank_type",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1,2,3],Comment="卡类型,0:其他;1:贷记卡;2:借记卡;3:准贷记卡;"},
+    {Name="sett_card_no",StructTag="sett_card_no",StorageKey="sett_card_no",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,IsIndex=true, IdxName="idx_sett_card_no",Comment="结算卡号"},
+    {Name="id_card",StructTag="id_card",StorageKey="id_card",FieldType="string",MaxLen=32,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,IsUnique=true,UidxName="uidx_id_card",Comment="身份证"},
+    {Name="telphone",StructTag="telphone",StorageKey="telphone",FieldType="string",MaxLen=16,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,IdxName="idx_phone",Comment="预留手机号"},
+    {Name="bank_name",StructTag="bank_name",StorageKey="bank_name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="银行名称"},
+    {Name="branch_name",StructTag="branch_name",StorageKey="branch_name",FieldType="string",MaxLen=128,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="开户行支行名称"},
+    {Name="opening_address",StructTag="opening_address",StorageKey="opening_address",FieldType="string",MaxLen=256,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="开户地址"},
+    {Name="amount",StructTag="amount",StorageKey="amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="结算金额"},
+    {Name="fee",StructTag="fee",StorageKey="fee",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=true,IsOptional=true,Comment="手续费"},
+    {Name="receipt_url",StructTag="receipt_url",StorageKey="receipt_url",FieldType="string",MaxLen=1024,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="电子回执单"},
+    {Name="status",StructTag="status",StorageKey="status",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Enumerable=true,EnumVals=[0,1,2,3,4,5],IdxName="idx_status",Comment="状态,0:pedding;1:audited;2:rejected;3:during;4:completed;5:failed;"},
+    {Name="audited_at",StructTag="audited_at",StorageKey="audited_at",FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true,IdxName="idx_audited_at",Comment="审核时间"},
+    {Name="operator",StructTag="operator",StorageKey="operator",FieldType="string", MaxLen=64,MinLen=0,DefaultVal="",IsOptional=true,Comment="操作人"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="bill"
+Comment="交易账单"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="bill_no",StructTag="bill_no",StorageKey="bill_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsUnique=true,UidxName="uidx_bill_no",Comment="账单编号"},
+    {Name="bill_category",StructTag="bill_category",StorageKey="bill_category",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1],omment="产品分类,0:pos;1:goods"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名称"},
+    {Name="supplier",StructTag="supplier",StorageKey="supplier",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="服务商"},
+    {Name="contact",StructTag="contact",StorageKey="contact",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=true,IsOptional=true,Comment="联系方式"},
+    {Name="user_id",StructTag="user_id",StorageKey="user_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsForeignKey=true,FkName="fk_user_id",IsIndex=true,IdxName="idx_user_id",Comment="用户ID"},
+    {Name="cost",StructTag="cost",StorageKey="cost",FieldType="cost",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="税前费用"},
+    {Name="tax_fee",StructTag="tax_fee",StorageKey="tax_fee",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="税费"},
+    {Name="total",StructTag="total",StorageKey="total",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="总计"},
+    {Name="latest_amount",StructTag="latest_amount",StorageKey="latest_amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="最近账单付款"},
+    {Name="bill_date",StructTag="bill_date",StorageKey="bill_date",  FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="下发日期"},
+    {Name="period",StructTag="period",StorageKey="period",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Comment="账单周期"},
+    {Name="is_noticed",StructTag="is_noticed",StorageKey="is_noticed",  FieldType="bool",IsOptional=true,DefaultVal=0, IdxName="idx_is_noticed",Comment="是否通知"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]
+
+[[DB.Tables]]
+Name="commission"
+Comment="订单返佣"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="order_no",StructTag="order_no",StorageKey="order_no",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsUnique=true,UidxName="uidx_order_no",Comment="订单编号"},
+    {Name="merchant_id",StructTag="merchant_id",StorageKey="merchant_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsIndex=true, IdxName="idx_merchant_id",Comment="商户ID"},
+    {Name="merchant_name",StructTag="merchant_name",StorageKey="merchant_name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="商户名称"},
+    {Name="activity_id",StructTag="activity_id",StorageKey="activity_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,IsForeignKey=true,FkName="fk_activity_id",IsIndex=true,IdxName="idx_activity_id",Comment="活动ID"},
+    {Name="name",StructTag="name",StorageKey="name",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="名称"},
+    {Name="amount",StructTag="amount",StorageKey="amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="佣金"},
+    {Name="sett_amount",StructTag="sett_amount",StorageKey="sett_amount",FieldType="decimal",Precision=10,Scale=2,DefaultVal=0.00,IsSensitive=false,IsOptional=true,Comment="结算金额"},
+    {Name="sett_time",StructTag="sett_time",StorageKey="sett_time",  FieldType="timestamp",DefaultVal="",IsOptional=true,Comment="结算时间"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="system_dict"
+Comment="系统字典"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="parentID"},
+    {Name="field_key",StructTag="field_key",StorageKey="field_key",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="key"},
+    {Name="field_value",StructTag="field_value",StorageKey="field_value",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="值"},
+    {Name="weight",StructTag="weight",StorageKey="weight",FieldType="int",IsOptional=true,DefaultVal=0,Comment="权重"},
+    {Name="desc",StructTag="desc",StorageKey="desc",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="描述"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="notice"
+Comment="通知"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="notice_type",StructTag="notice_type",StorageKey="notice_type",FieldType="int",MaxLen=8,MinLen=0,DefaultVal=0,IsOptional=true,Enumerable=true,EnumVals=[0,1],Comment="类型,0:public;1:motto;"},
+    {Name="title",StructTag="title",StorageKey="title",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,IsIndex=true,IdxName="idx_name",Comment="名称"},
+    {Name="content",StructTag="content",StorageKey="content",FieldType="string",MaxLen=128,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="content"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"}
+]
+
+[[DB.Tables]]
+Name="setting"
+Comment="系统设置"
+Columns=[
+    {Name="id",StructTag="id",StorageKey="id",FieldType="int",MaxLen=64,MinLen=0,AutoInc=true,IsNonNegative=true,DefaultVal=0,IsSensitive=false,IsOptional=true,IsPrimary=true,PkName="pk_id",Comment="id"},
+    {Name="parent_id",StructTag="parent_id",StorageKey="parent_id",FieldType="int",DefaultVal=0,MaxLen=64,MinLen=0,IsOptional=true,Comment="parentID"},
+    {Name="field_key",StructTag="field_key",StorageKey="field_key",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="key"},
+    {Name="field_value",StructTag="field_value",StorageKey="field_value",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="值"},
+    {Name="priority",StructTag="priority",StorageKey="priority",FieldType="int",MaxLen=8,MinLen=0,IsOptional=true,DefaultVal=0,Comment="优先级"},
+    {Name="desc",StructTag="desc",StorageKey="desc",FieldType="string",MaxLen=64,MinLen=0,DefaultVal="",IsSensitive=false,IsOptional=true,Comment="描述"},
+    {Name="created_at",StructTag="created_at",StorageKey="created_at",  FieldType="timestamp",DefaultVal="CURRENT_TIMESTAMP",IsOptional=true,IsIndex=true,IdxName="idx_created_at",Comment="创建时间"},
+    {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
+]

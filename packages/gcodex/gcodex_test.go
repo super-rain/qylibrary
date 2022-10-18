@@ -7,6 +7,6 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	err := Run("backend", "phoenix_house", "tmpl/model/", "examples/backend/")
+	err := Run("backend", "top_starter", "tmpl/model/", "examples/backend/")
 	assert.Nil(t, err, "gcodex.Run() success")
 }
