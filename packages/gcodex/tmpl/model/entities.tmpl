@@ -272,6 +272,7 @@ func ({{ToCamel .Name}}) Edges() []ent.Edge {
 	{{- else -}}
 		return nil
 	{{- end}}
+	}
 }
 
 // Annotations of the {{ToCamel .Name}}.
