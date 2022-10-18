@@ -1,9 +1,10 @@
 package pubsub
 
-import(
+import (
 	"fmt"
+	"testing"
 )
 
 func TestBulkRead(t *testing.T) {
-	fmt.Println(1&1024)
+	fmt.Println(1 & 1024)
 }
