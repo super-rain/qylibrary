@@ -27,8 +27,6 @@ Columns=[
     {Name="updated_at",StructTag="updated_at",StorageKey="updated_at",  FieldType="timestamp",DefaultVal="",IsOptional=true,IsIndex=true, IdxName="idx_updated_at",Comment="更新时间"}
 ]
 
-Edges=[{From="tag",FromName="tags",To="pet",ToName="pets",RefName="user"},{To="group",ToName="groups",RefName="user"}]
-
 [[DB.Tables]]
 Name="user_basic"
 Comment="用户基础信息"
